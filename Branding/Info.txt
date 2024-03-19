@@ -1,0 +1,1 @@
+This is to store the branding images of the script. There are requests made to the images mainly for the bot.
