@@ -1,15 +1,17 @@
-for Index, FallenGuardActor in next, getactors() do 
-    run_on_actor(FallenGuardActor, [[
-        local Stats = game:GetService("Stats");
+        for Index, FallenGuardActor in next, getactors() do 
+            run_on_actor(FallenGuardActor, [[
+                local Stats = game:GetService("Stats");
 
-        local Namecall; Namecall = hookmetamethod(Stats, "__namecall", function(self, ...)
-            local Method = getnamecallmethod();
+                local Memory = Stats:GetTotalMemoryUsageMb() 
 
-            if Method == "GetTotalMemoryUsageMb" then
-                return 0/0;
-            end;
+                local Namecall; Namecall = hookmetamethod(Stats, "__namecall", function(self, ...)
+                    local Method = getnamecallmethod();
 
-            return Namecall(self, ...)
-        end);
-    ]])
-end;
+                    if Method == "GetTotalMemoryUsageMb" then
+                        return Memory + math.random(-3, 3);
+                    end;
+
+                    return Namecall(self, ...)
+                end);
+            ]])
+        end;
