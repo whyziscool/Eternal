@@ -1,17 +1,23 @@
-        for Index, FallenGuardActor in next, getactors() do 
-            run_on_actor(FallenGuardActor, [[
-                local Stats = game:GetService("Stats");
+for Index, Value in next, get_actors() do 
+    run_on_actor(Value, [[
+        local Stats = cloneref(game:GetService("Stats"))
+        local Memory = Stats:GetTotalMemoryUsageMb()
+        local GetTotalMemoryUsageMb = Stats.GetTotalMemoryUsageMb;
+        local MT = getrawmetatable(game:GetService("Stats"))
 
-                local Memory = Stats:GetTotalMemoryUsageMb() 
+        setreadonly(MT, false)
+        local Namecall = MT.__namecall;
+        MT.__namecall = function(self, ...)
+            local Method = getnamecallmethod()
 
-                local Namecall; Namecall = hookmetamethod(Stats, "__namecall", function(self, ...)
-                    local Method = getnamecallmethod();
+            if Method == "GetTotalMemoryUsageMb" then
+                local Fake = Memory + math.random(1, 3) + math.random() / 10
+                return Fake
+            
+            end
 
-                    if Method == "GetTotalMemoryUsageMb" then
-                        return Memory + math.random(-3, 3);
-                    end;
-
-                    return Namecall(self, ...)
-                end);
-            ]])
-        end;
+            return Namecall(self, ...)
+        end
+        setreadonly(MT, true)   
+    ]])
+end;
